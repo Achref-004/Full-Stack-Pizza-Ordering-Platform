@@ -339,8 +339,6 @@ Full-Stack-Pizza-Ordering-Platform/
 │       ├── main.jsx             # React entry point
 │       ├── App.jsx              # BrowserRouter and access redirects
 │       └── pages/               # Customer and administrator screens
-├── docs/
-│   └── technical-guide.md       # Detailed installation, API, data, caveats
 └── README.md
 ```
 
