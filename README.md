@@ -521,14 +521,6 @@ These are suggested extensions, not implemented capabilities or a committed road
 
 
 
-
-
----
-
-# License
-
-The backend manifest declares **ISC**, but there is no repository-wide `LICENSE` file and the frontend manifest does not specify a license. Whole-project licensing needs maintainer clarification; no broader reuse permission is inferred here.
-
 # Author
 
 **Achref Bejaoui** 
