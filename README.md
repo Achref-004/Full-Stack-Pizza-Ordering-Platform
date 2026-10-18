@@ -21,7 +21,7 @@
 [Showcase](#platform-showcase) ·
 [Installation](#installation-and-run) ·
 [Verification](#verification) ·
-[Technical Guide](docs/technical-guide.md)
+
 
 </div>
 
@@ -62,10 +62,6 @@ Delivery / Pickup Order
       └──► SMTP Email Notifications
 ```
 
-> [!IMPORTANT]
-> This is a development project, not a verified production commerce platform. Card payment is simulated. Public administrator registration and default-admin seeding require hardening before any public deployment.
->
-> Showcase images come from the repository’s `front/public` directory. They illustrate application screens, not independently verified production operation or performance results.
 
 ---
 
@@ -81,7 +77,7 @@ A pizza-ordering workflow involves more than choosing an item from a menu:
 
 Pizza Pete’s brings these concerns into one application, while keeping the browser interface, HTTP API, business rules, and persistence code identifiable in the repository.
 
-**Intended audience:** developers exploring full-stack ordering workflows and maintainers extending a restaurant-focused application. The interface is primarily French, and customer-facing prices generally use Tunisian dinars (`DT`).
+
 
 ---
 
@@ -111,7 +107,6 @@ flowchart TB
 | **Mongoose models** | Define users, pizzas, carts, orders, indexes, validation, and save/update hooks. |
 | **Email service** | Attempts order-confirmation and status-update messages through SMTP. |
 
-The frontend and backend are installed and run separately. Express does not serve the frontend build. There is no centralized frontend API client: API-calling pages currently hardcode `http://localhost:5004`.
 
 ---
 
@@ -137,7 +132,7 @@ API Loads Current User and Checks Access
 
 The browser uses cached authentication data for page redirects; the API checks the actual database user for protected requests. Customers can edit their profile and change passwords using their current password. Email verification, password reset, refresh tokens, and token revocation are not implemented.
 
-**Source:** `back/src/service/authService.js`, `back/src/middleware/auth.js`, `back/src/config/jwt.js`, and `front/src/pages/Login.jsx`.
+
 
 ## 2. Menu Discovery and Favorites
 
@@ -153,7 +148,7 @@ Customers can browse available pizzas, search by name, filter categories, and ma
 
 Favorites are Pizza references stored on the User document. Public menu queries also include available custom pizzas; custom recipes are not a separate private catalog.
 
-**Source:** `pizzaRepository.js`, `userRepository.js`, `Home.jsx`.
+
 
 ## 3. Pizza Customization and Saved Recipes
 
@@ -178,9 +173,6 @@ Base Pizza
 
 Saved recipes use the same **Pizza model** as menu items, with `isCustom`, `createdBy`, `customConfig`, and a generated `customPizzaId`.
 
-> The browser computes the price. The current cart API accepts that submitted price instead of reconstructing it from trusted catalog options. Server-side pricing is a required improvement before commercial use.
-
-**Source:** `Home.jsx`, `MyCustomPizzas.jsx`, `pizzaService.js`, `model.js`.
 
 ## 4. Persistent Cart and Checkout
 
@@ -197,7 +189,7 @@ Checkout reads the **persisted server-side cart** rather than trusting frontend-
 | Card | Marked `paid` without a payment-provider transaction. |
 | Order creation | Save an order snapshot, then clear the cart in a separate write. |
 
-**Source:** `cartService.js`, `cartRepository.js`, `orderService.js`, `Cart.jsx`.
+
 
 ## 5. Customer Order Management
 
@@ -215,7 +207,7 @@ This is an illustrative fulfillment path, **not an enforced state machine**: adm
 
 The tracking API returns the stored status and an estimated time. It does not provide GPS tracking or a live courier integration.
 
-**Source:** `orderService.js`, `orderRepository.js`, `Orders.jsx`.
+
 
 ## 6. Restaurant Administration and Notifications
 
@@ -228,13 +220,12 @@ Administrator pages cover:
 
 Nodemailer attempts confirmation and status-update emails. SMTP failures are caught and logged; they do not undo a persisted order. Email delivery is attempted inside the request rather than through a background job queue.
 
-**Source:** `Admin.jsx`, `AdminPizzas.jsx`, `AdminOrders.jsx`, `adminService.js`, `adminOrderService.js`, `emailService.js`.
+
 
 ---
 
 # Platform Showcase
 
-The following images are selected from the screenshots supplied in `front/public`. Screens containing visible personal contact details are not embedded here. Displayed counts and amounts are capture-time data, not project evaluation metrics.
 
 ## Menu Categories and Favorites
 
@@ -264,7 +255,6 @@ The configuration dialog exposes size and crust surcharges alongside additional 
 
 Customers can change quantities, remove items, inspect the delivery fee, and proceed to checkout.
 
-> The screenshot contains payment-related UI labels. These labels do not establish payment security or a real payment integration; the card flow remains simulated.
 
 ---
 
@@ -301,7 +291,6 @@ sequenceDiagram
     UI-->>Customer: Show confirmation
 ```
 
-The confirmation page uses router state or cached `lastOrder` data and includes a demo fallback. Check `/orders` or the order API to confirm persistence rather than relying on the confirmation screen alone.
 
 ---
 
@@ -321,7 +310,7 @@ The confirmation page uses router state or cached `lastOrder` data and includes 
 | Configuration | dotenv, cors | Environment loading and cross-origin middleware. |
 | Development checks | ESLint 9, nodemon | Frontend lint and backend reloads. |
 
-Major versions reflect declared dependency ranges. Lockfiles pin the installed dependency trees; [the technical guide](docs/technical-guide.md#technology-stack) provides the detailed package reference.
+
 
 ---
 
@@ -355,7 +344,6 @@ Full-Stack-Pizza-Ordering-Platform/
 └── README.md
 ```
 
-There is no root-level package manifest. Install dependencies and run scripts separately inside `front/` and `back/`.
 
 ---
 
@@ -380,7 +368,7 @@ erDiagram
 
 Cart and order items are embedded subdocuments, not separate collections. Their mixed-type pizza IDs support ObjectIds and custom identifiers rather than one enforced reference scheme.
 
-[Read model relationships, indexes, hooks, and data-lifecycle caveats →](docs/technical-guide.md#database-and-data-lifecycle)
+
 
 ---
 
@@ -388,7 +376,7 @@ Cart and order items are embedded subdocuments, not separate collections. Their 
 
 ## 1 / Install
 
-**Requirements:** Node.js 22.12+ in the 22.x line, npm, Git, and a running MongoDB server. No MongoDB server version is pinned. SMTP is optional for actual email delivery.
+**Requirements:** Node.js 22.12+ in the 22.x line, npm, Git, and a running MongoDB server. SMTP is optional for actual email delivery.
 
 ```bash
 git clone https://github.com/Achref-004/Full-Stack-Pizza-Ordering-Platform.git
@@ -419,8 +407,7 @@ SMTP_PASS=
 node -e "console.log(require('node:crypto').randomBytes(48).toString('hex'))"
 ```
 
-> [!WARNING]
-> Use an **isolated development database**. Startup inserts six pizzas if the Pizza collection is empty and creates a hardcoded default administrator if none exists. Credentials are in the seed code and printed by startup; they are not repeated here. There is no seed-disable flag.
+
 
 ## 3 / Run
 
@@ -438,9 +425,6 @@ curl -i http://localhost:5004/
 curl -i http://localhost:5004/api/pizzas
 ```
 
-**Local-browser setup only:** frontend pages hardcode `http://localhost:5004`. No `VITE_API_URL` or API proxy is implemented. Remote previews and public hosting need configuration/code changes first. A root `200 OK` is not a database health check.
-
-[Detailed installation](docs/technical-guide.md#installation-and-local-setup) · [Configuration reference](docs/technical-guide.md#configuration-reference) · [Troubleshooting](docs/technical-guide.md#troubleshooting)
 
 
 ---
@@ -455,7 +439,7 @@ curl -i http://localhost:5004/api/pizzas
                          └── /profile
 ```
 
-Use **cash** for local checkout exploration. Never enter real card information.
+
 
 ### Administrator journey
 
@@ -481,52 +465,13 @@ Administrator login → /admin
 
 Protected requests use `Authorization: Bearer <token>`.
 
-[Full endpoint tables](docs/technical-guide.md#rest-api-reference) · [Copyable API walkthrough](docs/technical-guide.md#example-register-authenticate-add-a-pizza-and-order) · [Troubleshooting](docs/technical-guide.md#troubleshooting)
+
 
 ---
 
-# Verification
 
-| Check | Observed result |
-| :--- | :--- |
-| Dependency installation | ✅ Both packages installed with `npm ci`. |
-| Frontend production build | ✅ Succeeded; JavaScript chunk-size warning. |
-| Backend syntax checks | ✅ All backend JavaScript files passed `node --check`. |
-| Frontend lint | ⚠️ **23 errors / 10 warnings** remain. |
-| Isolated API smoke checks | ✅ Root 200, protected cart 401, unknown path 404. |
-| Database, checkout, SMTP | ➖ Not exercised against live MongoDB/SMTP. |
-| Showcase images | Repository-provided screenshots; not a new end-to-end verification. |
 
-<sub>Code checks performed on 2026-10-18 using Node.js 22.22.3 and npm 10.9.8. No automated test suite or `test` script is committed. Repository screenshots do not establish that all workflows are tested.</sub>
 
-<details>
-<summary><strong>Run the available checks</strong></summary>
-
-```bash
-(cd front && npm run build)
-(cd front && npm run lint)
-find back/src -name '*.js' -exec node --check {} \;
-```
-
-The frontend build outputs `front/dist/`. `npm run preview` from `front/` serves that build locally; it is not a production deployment process. The backend has `npm start` for a non-watching process. No validated hosting configuration or CI pipeline is supplied.
-
-</details>
-
-<details>
-<summary><strong>Important limitations before extending or deploying</strong></summary>
-
-- Public administrator registration, default credentials, and password-containing request logs require immediate hardening.
-- Cart prices are client-supplied; card selection does not charge a provider.
-- `/api/orders/history` and `/api/custom-pizzas/popular` are shadowed by earlier `/:id` routes. Use `/api/orders/my-orders` for the order list.
-- The order update hook can regenerate tracking numbers and estimates when status changes.
-- Available-only queries hide unavailable pizzas from shared admin listing/statistics; public listings also include available custom recipes.
-- Checkout has no transaction/idempotency protection; user/pizza deletion does not cascade.
-- Browser authentication uses localStorage; API URLs are duplicated and hardcoded.
-- No real courier tracking, password-reset flow, inventory system, or verified production deployment is implemented.
-
-See the [full limitations](docs/technical-guide.md#known-limitations-and-future-improvements) for reference handling, popularity counters, validation, and data-consistency details.
-
-</details>
 
 ---
 
@@ -535,18 +480,14 @@ See the [full limitations](docs/technical-guide.md#known-limitations-and-future-
 
 This project contains implemented workflows, but several boundaries matter when evaluating or extending it:
 
-- **Admin provisioning:** public administrator registration and hardcoded default-admin creation must be restricted before external access. Signup/seed logs can expose passwords.
-- **Payment:** no gateway transaction or refund mechanism exists; card selection immediately marks an order paid.
-- **Pricing:** cart line prices are supplied by the browser, not recomputed from trusted server-side catalog rules.
+
 - **Order consistency:** saving orders and clearing carts are separate writes without a transaction or idempotency key.
 - **Tracking identifiers:** the Order update hook can regenerate order numbers and estimated times on status changes.
-- **Route ordering:** `/api/orders/history` and `/api/custom-pizzas/popular` are shadowed by earlier `/:id` routes.
-- **Menu queries:** available-only queries are reused for admin listings/statistics, and public queries include available custom recipes.
 - **Session and deployment configuration:** tokens use localStorage, and frontend API URLs are hardcoded to localhost.
 - **Data integrity:** deletes do not cascade; mixed pizza IDs, population, and popularity counters need stronger integration coverage.
 - **Quality checks:** there is no committed automated test suite, and frontend lint findings remain.
 
-[Detailed limitations and deployment considerations →](docs/technical-guide.md#known-limitations-and-future-improvements)
+
 
 ---
 
@@ -558,51 +499,25 @@ These are suggested extensions, not implemented capabilities or a committed road
 
 - Controlled administrator provisioning and sensitive-log removal.
 - Trusted server-side pricing and stricter request field allowlists.
-- Provider-backed payment confirmation and refund handling.
-- Reviewed session storage, token lifecycle, CORS, and rate limiting.
+
 
 ### Ordering and Data Integrity
 
 - Stable tracking numbers and explicit status-transition rules.
 - Transactional/idempotent checkout.
-- Consistent pizza identifier handling and reference cleanup.
-- Background email jobs with delivery retries.
+
 
 ### Engineering
 
 - API integration tests and browser workflow tests.
 - Centralized frontend API configuration and reusable UI components.
-- Lint cleanup, code splitting, and automated CI checks.
-- A validated deployment runbook, monitoring, and backup procedures.
+
 
 ---
 
-# Technical Documentation
 
-The visual overview is complemented by a source-grounded implementation guide:
 
-| Topic | Documentation |
-|---|---|
-| Startup, JWT flow, pricing, checkout | [How the application works](docs/technical-guide.md#how-the-application-works) |
-| Prerequisites and installation | [Installation and local setup](docs/technical-guide.md#installation-and-local-setup) |
-| Environment variables | [Configuration reference](docs/technical-guide.md#configuration-reference) |
-| Every route and access requirement | [REST API reference](docs/technical-guide.md#rest-api-reference) |
-| Models and persistence | [Database and data lifecycle](docs/technical-guide.md#database-and-data-lifecycle) |
-| Errors and practical fixes | [Troubleshooting](docs/technical-guide.md#troubleshooting) |
-| Build commands and production gaps | [Build and deployment considerations](docs/technical-guide.md#build-and-deployment-considerations) |
 
-No validated public deployment is supplied. `npm run build` produces frontend assets; `npm start` launches the backend without nodemon. Neither command addresses the deployment/security gaps on its own.
-
----
-
-# Contributing
-
-1. Open an [issue](https://github.com/Achref-004/Full-Stack-Pizza-Ordering-Platform/issues) with reproduction steps or a focused proposal.
-2. Keep changes scoped and document API, model, configuration, and UI impacts.
-3. Run the available checks and report existing failures separately from new ones.
-4. Include tests where possible and screenshots for interface changes.
-
-Never publish `.env` contents, JWTs, real payment information, or customer data. No private security-reporting channel is documented in the repository.
 
 ---
 
@@ -612,11 +527,10 @@ The backend manifest declares **ISC**, but there is no repository-wide `LICENSE`
 
 # Author
 
-**Achref Bejaoui** — named in the inspected Git commit metadata.
+**Achref Bejaoui** 
 
 [GitHub Profile](https://github.com/Achref-004) · [Project Repository](https://github.com/Achref-004/Full-Stack-Pizza-Ordering-Platform)
 
-No verified portfolio or private contact channel is supplied. Sample support details in email templates are not treated as author contact information.
 
 ---
 
@@ -626,6 +540,6 @@ No verified portfolio or private contact channel is supplied. Sample support det
 
 **React interface. Express workflows. MongoDB persistence.**
 
-[Explore the Code](https://github.com/Achref-004/Full-Stack-Pizza-Ordering-Platform) · [Read the Technical Guide](docs/technical-guide.md) · [Report an Issue](https://github.com/Achref-004/Full-Stack-Pizza-Ordering-Platform/issues)
+
 
 </div>
