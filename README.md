@@ -525,7 +525,8 @@ These are suggested extensions, not implemented capabilities or a committed road
 
 **Achref Bejaoui** 
 
-[GitHub Profile](https://github.com/Achref-004) · [Project Repository](https://github.com/Achref-004/Full-Stack-Pizza-Ordering-Platform)
+[LinkedIn](https://linkedin.com/in/achref-bejaoui00) ·
+[GitHub](https://github.com/Achref-004)
 
 
 ---
