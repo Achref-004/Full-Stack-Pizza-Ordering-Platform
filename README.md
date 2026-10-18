@@ -1,3 +1,9 @@
+<p align="center">
+  <img
+    src="front/public/Screenshot 2026-10-18 171724.png"
+    alt="platform logo"
+  >
+</p>
 <div align="center">
 
 # 🍕 Pizza Pete’s
